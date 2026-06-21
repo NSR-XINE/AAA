@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,8 @@ fun LogConsoleScreen(
     
     val listState = rememberLazyListState()
     var autoScrollEnabled by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val exportPath by viewModel.exportPath.collectAsState()
 
     // Side-effect to auto-scroll when new logs arrive, only if auto-scroll is enabled
     LaunchedEffect(logs.size) {
@@ -123,12 +126,26 @@ fun LogConsoleScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isStreaming) Color(0xFFFF2D55) else Color(0xFF00D2FF)
                         ),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1.3f)
                     ) {
                         Text(
                             text = if (isStreaming) "Stop Engine" else "Simulate Logs",
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = Color.White,
+                            maxLines = 1
+                        )
+                    }
+
+                    Button(
+                        onClick = { viewModel.exportLogs(context) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF334155)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Save Logs",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            maxLines = 1
                         )
                     }
 
@@ -138,7 +155,25 @@ fun LogConsoleScreen(
                         border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "Clear Terminal")
+                        Text(text = "Clear", maxLines = 1)
+                    }
+                }
+
+                if (exportPath != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF0F172A), shape = RoundedCornerShape(6.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = exportPath!!,
+                            color = Color(0xFF00E676),
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
                     }
                 }
             }

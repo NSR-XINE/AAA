@@ -71,6 +71,43 @@ class LogMonitorViewModel(
         _logs.value = persistentListOf()
     }
 
+    private val _exportPath = MutableStateFlow<String?>(null)
+    val exportPath: StateFlow<String?> = _exportPath.asStateFlow()
+
+    fun exportLogs(context: android.content.Context) {
+        val currentLogs = _logs.value
+        if (currentLogs.isEmpty()) {
+            _exportPath.value = "Terminal is empty"
+            clearExportPathDelayed()
+            return
+        }
+
+        viewModelScope.launch(dispatcherProvider.io) {
+            try {
+                val dir = context.getExternalFilesDir(null) ?: context.filesDir
+                val file = java.io.File(dir, "workstation_logs_${System.currentTimeMillis()}.txt")
+                file.bufferedWriter().use { writer ->
+                    currentLogs.forEach { log ->
+                        val time = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
+                            .format(java.util.Date(log.timestamp))
+                        writer.write("[$time] [${log.level.name}] ${log.message}\n")
+                    }
+                }
+                _exportPath.value = "Saved to: ${file.name}"
+            } catch (e: Exception) {
+                _exportPath.value = "Export failed: ${e.localizedMessage}"
+            }
+            clearExportPathDelayed()
+        }
+    }
+
+    private fun clearExportPathDelayed() {
+        viewModelScope.launch(dispatcherProvider.default) {
+            kotlinx.coroutines.delay(4000)
+            _exportPath.value = null
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         stopStreaming()

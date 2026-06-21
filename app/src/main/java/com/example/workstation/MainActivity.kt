@@ -60,7 +60,7 @@ fun WorkstationMainDashboard(
     automationViewModel: AutomationViewModel
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Log Monitor", "Sys Mapper", "Automation")
+    val tabs = listOf("Log Monitor", "Sys Mapper", "Automation", "Developer")
 
     Scaffold(
         bottomBar = {
@@ -78,7 +78,8 @@ fun WorkstationMainDashboard(
                                 text = when (index) {
                                     0 -> "📟"
                                     1 -> "🔍"
-                                    else -> "⚙️"
+                                    2 -> "⚙️"
+                                    else -> "👨‍💻"
                                 },
                                 fontSize = 18.sp
                             )
@@ -104,6 +105,7 @@ fun WorkstationMainDashboard(
                 0 -> LogConsoleScreen(viewModel = monitorViewModel)
                 1 -> HardwareDashboardScreen(viewModel = mapperViewModel)
                 2 -> AutomationScreen(viewModel = automationViewModel)
+                3 -> DeveloperScreen()
             }
         }
     }

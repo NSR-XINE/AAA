@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:label="Dev Workstation"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.Dark">
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
         
         <activity
             android:name=".MainActivity"

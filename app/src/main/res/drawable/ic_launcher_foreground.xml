@@ -1,0 +1,90 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Cybernetic grid lines (subtle background detail) -->
+    <path
+        android:pathData="M54,18 L54,90"
+        android:strokeWidth="0.5"
+        android:strokeColor="#1E293B" />
+    <path
+        android:pathData="M18,54 L90,54"
+        android:strokeWidth="0.5"
+        android:strokeColor="#1E293B" />
+
+    <!-- Concentric tech rings -->
+    <path
+        android:pathData="M 54, 38 A 16, 16 0 1, 1 53.9, 38"
+        android:strokeWidth="1"
+        android:strokeColor="#334155" />
+
+    <!-- Outer broken rings -->
+    <!-- Top-Right Arc -->
+    <path
+        android:pathData="M 58, 26 A 28, 28 0 0, 1 82, 50"
+        android:strokeWidth="2.5"
+        android:strokeColor="#00D2FF"
+        android:strokeLineCap="round" />
+    <!-- Bottom-Right Arc -->
+    <path
+        android:pathData="M 82, 58 A 28, 28 0 0, 1 58, 82"
+        android:strokeWidth="2.5"
+        android:strokeColor="#0EA5E9"
+        android:strokeLineCap="round" />
+    <!-- Bottom-Left Arc -->
+    <path
+        android:pathData="M 50, 82 A 28, 28 0 0, 1 26, 58"
+        android:strokeWidth="2.5"
+        android:strokeColor="#00D2FF"
+        android:strokeLineCap="round" />
+    <!-- Top-Left Arc -->
+    <path
+        android:pathData="M 26, 50 A 28, 28 0 0, 1 50, 26"
+        android:strokeWidth="2.5"
+        android:strokeColor="#0EA5E9"
+        android:strokeLineCap="round" />
+
+    <!-- Orbital node dots -->
+    <path
+        android:pathData="M 58, 26 A 1.5, 1.5 0 1, 1 57.9, 26"
+        android:fillColor="#00D2FF" />
+    <path
+        android:pathData="M 26, 50 A 1.5, 1.5 0 1, 1 25.9, 50"
+        android:fillColor="#00D2FF" />
+    <path
+        android:pathData="M 82, 58 A 1.5, 1.5 0 1, 1 81.9, 58"
+        android:fillColor="#0EA5E9" />
+    <path
+        android:pathData="M 50, 82 A 1.5, 1.5 0 1, 1 49.9, 82"
+        android:fillColor="#0EA5E9" />
+
+    <!-- Center terminal symbol > -->
+    <path
+        android:pathData="M 40, 46 L 48, 54 L 40, 62"
+        android:strokeWidth="3.5"
+        android:strokeColor="#00D2FF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- System metric indicator bars -->
+    <path
+        android:pathData="M 54, 48 L 68, 48"
+        android:strokeWidth="3"
+        android:strokeColor="#10B981"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M 54, 54 L 62, 54"
+        android:strokeWidth="3"
+        android:strokeColor="#F59E0B"
+        android:strokeLineCap="round" />
+
+    <!-- Console blinking cursor _ -->
+    <path
+        android:pathData="M 54, 62 L 68, 62"
+        android:strokeWidth="3"
+        android:strokeColor="#00D2FF"
+        android:strokeLineCap="round" />
+
+</vector>

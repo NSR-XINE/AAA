@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -77,16 +78,24 @@ fun LogConsoleScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF090D16)) // Matching space background
+            .background(Color.Transparent)
     ) {
         // Stats & Operations Controller Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF111827)),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, Color(0xFF1F2937))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF111827).copy(alpha = 0.45f)),
+            border = BorderStroke(
+                1.dp,
+                Brush.linearGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.15f),
+                        Color.White.copy(alpha = 0.02f)
+                    )
+                )
+            ),
+            shape = RoundedCornerShape(14.dp)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
                 Row(
@@ -285,8 +294,19 @@ fun LogConsoleScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .padding(bottom = 12.dp)
-                .background(Color(0xFF06090F), shape = RoundedCornerShape(10.dp))
-                .border(BorderStroke(1.dp, Color(0xFF1F2937)), shape = RoundedCornerShape(10.dp))
+                .background(Color(0xFF06090F).copy(alpha = 0.55f), shape = RoundedCornerShape(14.dp))
+                .border(
+                    BorderStroke(
+                        1.dp,
+                        Brush.linearGradient(
+                            listOf(
+                                Color.White.copy(alpha = 0.12f),
+                                Color.White.copy(alpha = 0.02f)
+                            )
+                        )
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                )
                 .padding(10.dp)
         ) {
             if (logs.isEmpty()) {

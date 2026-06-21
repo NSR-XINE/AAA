@@ -106,7 +106,7 @@ fun DeveloperScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF090D16))
+            .background(Color.Transparent)
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -169,9 +169,17 @@ fun DeveloperScreen(
         // Developer Profile Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A)),
-            border = BorderStroke(1.dp, Color(0xFF1F2937)),
-            shape = RoundedCornerShape(12.dp)
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A).copy(alpha = 0.45f)),
+            border = BorderStroke(
+                1.dp,
+                Brush.linearGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.15f),
+                        Color.White.copy(alpha = 0.02f)
+                    )
+                )
+            ),
+            shape = RoundedCornerShape(14.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -240,9 +248,17 @@ fun DeveloperScreen(
         // Live Engine Diagnostics Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A)),
-            border = BorderStroke(1.dp, Color(0xFF1F2937)),
-            shape = RoundedCornerShape(12.dp)
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A).copy(alpha = 0.45f)),
+            border = BorderStroke(
+                1.dp,
+                Brush.linearGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.15f),
+                        Color.White.copy(alpha = 0.02f)
+                    )
+                )
+            ),
+            shape = RoundedCornerShape(14.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -318,9 +334,17 @@ fun DeveloperScreen(
         // Technical Stack Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A)),
-            border = BorderStroke(1.dp, Color(0xFF1F2937)),
-            shape = RoundedCornerShape(12.dp)
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A).copy(alpha = 0.45f)),
+            border = BorderStroke(
+                1.dp,
+                Brush.linearGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.15f),
+                        Color.White.copy(alpha = 0.02f)
+                    )
+                )
+            ),
+            shape = RoundedCornerShape(14.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),

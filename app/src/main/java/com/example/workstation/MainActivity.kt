@@ -4,13 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.feature.monitor.ui.LogConsoleScreen
 import com.example.feature.monitor.ui.LogMonitorViewModel
@@ -40,16 +46,115 @@ class MainActivity : ComponentActivity() {
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.Transparent
                 ) {
-                    WorkstationMainDashboard(
-                        monitorViewModel = monitorViewModel,
-                        mapperViewModel = mapperViewModel,
-                        automationViewModel = automationViewModel
-                    )
+                    LiquidBackground {
+                        WorkstationMainDashboard(
+                            monitorViewModel = monitorViewModel,
+                            mapperViewModel = mapperViewModel,
+                            automationViewModel = automationViewModel
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LiquidBackground(content: @Composable () -> Unit) {
+    val infiniteTransition = rememberInfiniteTransition(label = "blobs")
+    
+    val blob1X by infiniteTransition.animateFloat(
+        initialValue = -0.2f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(18000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob1X"
+    )
+    val blob1Y by infiniteTransition.animateFloat(
+        initialValue = 0.1f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(22000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob1Y"
+    )
+
+    val blob2X by infiniteTransition.animateFloat(
+        initialValue = 1.2f,
+        targetValue = -0.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(20000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob2X"
+    )
+    val blob2Y by infiniteTransition.animateFloat(
+        initialValue = 0.8f,
+        targetValue = 0.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(16000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob2Y"
+    )
+
+    val blob3X by infiniteTransition.animateFloat(
+        initialValue = 0.1f,
+        targetValue = 0.9f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(25000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob3X"
+    )
+    val blob3Y by infiniteTransition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 0.9f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(15000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "blob3Y"
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF090D16))
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val width = size.width
+            val height = size.height
+            val baseRadius = width.coerceAtLeast(height) * 0.35f
+
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFF00D2FF).copy(alpha = 0.14f), Color.Transparent),
+                    center = Offset(width * blob1X, height * blob1Y),
+                    radius = baseRadius
+                )
+            )
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFF7C3AED).copy(alpha = 0.12f), Color.Transparent),
+                    center = Offset(width * blob2X, height * blob2Y),
+                    radius = baseRadius * 1.2f
+                )
+            )
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color(0xFFEC4899).copy(alpha = 0.08f), Color.Transparent),
+                    center = Offset(width * blob3X, height * blob3Y),
+                    radius = baseRadius * 0.9f
+                )
+            )
+        }
+        content()
     }
 }
 
@@ -63,9 +168,10 @@ fun WorkstationMainDashboard(
     val tabs = listOf("Log Monitor", "Sys Mapper", "Automation", "Developer")
 
     Scaffold(
+        containerColor = Color.Transparent,
         bottomBar = {
             NavigationBar(
-                containerColor = Color(0xFF0B0F19),
+                containerColor = Color(0xFF0B0F19).copy(alpha = 0.65f),
                 contentColor = Color.White
             ) {
                 tabs.forEachIndexed { index, title ->
@@ -89,7 +195,7 @@ fun WorkstationMainDashboard(
                             unselectedIconColor = Color.Gray,
                             selectedTextColor = Color(0xFF00D2FF),
                             unselectedTextColor = Color.Gray,
-                            indicatorColor = Color(0xFF1E293B)
+                            indicatorColor = Color(0xFF1E293B).copy(alpha = 0.5f)
                         )
                     )
                 }

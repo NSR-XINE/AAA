@@ -49,7 +49,7 @@ fun HardwareDashboardScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF090D16)) // Ultra dark space background
+            .background(Color.Transparent)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -124,9 +124,17 @@ fun HardwareDashboardScreen(
             // CPU Core Frequencies Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827)),
-                shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, Color(0xFF1F2937))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827).copy(alpha = 0.45f)),
+                border = BorderStroke(
+                    1.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.15f),
+                            Color.White.copy(alpha = 0.02f)
+                        )
+                    )
+                ),
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
@@ -146,9 +154,17 @@ fun HardwareDashboardScreen(
             // Thermal Zones Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827)),
-                shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, Color(0xFF1F2937))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827).copy(alpha = 0.45f)),
+                border = BorderStroke(
+                    1.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.15f),
+                            Color.White.copy(alpha = 0.02f)
+                        )
+                    )
+                ),
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
@@ -168,9 +184,17 @@ fun HardwareDashboardScreen(
             // Storage Block Devices Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827)),
-                shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, Color(0xFF1F2937))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF111827).copy(alpha = 0.45f)),
+                border = BorderStroke(
+                    1.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.15f),
+                            Color.White.copy(alpha = 0.02f)
+                        )
+                    )
+                ),
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(

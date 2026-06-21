@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.engine.dispatchers.DispatcherProvider
 import com.example.core.engine.dispatchers.DefaultDispatcherProvider
 import com.example.feature.monitor.client.LogWebSocketClient
+import com.example.feature.monitor.pipeline.LogLevel
 import com.example.feature.monitor.pipeline.LogLineUiModel
 import com.example.feature.monitor.pipeline.LogPipelineProcessor
 import com.example.feature.monitor.pipeline.chunkedFlow
@@ -30,6 +31,13 @@ class LogMonitorViewModel(
 
     private val _isStreaming = MutableStateFlow(false)
     val isStreaming: StateFlow<Boolean> = _isStreaming.asStateFlow()
+
+    private val _selectedFilter = MutableStateFlow<LogLevel?>(null)
+    val selectedFilter: StateFlow<LogLevel?> = _selectedFilter.asStateFlow()
+
+    fun setFilter(level: LogLevel?) {
+        _selectedFilter.value = level
+    }
 
     private var streamJob: Job? = null
     private var processJob: Job? = null

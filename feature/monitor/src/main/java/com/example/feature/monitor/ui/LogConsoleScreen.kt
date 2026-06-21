@@ -2,6 +2,8 @@ package com.example.feature.monitor.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.feature.monitor.pipeline.LogLineUiModel
 import com.example.feature.monitor.pipeline.LogLevel
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -36,11 +40,20 @@ fun LogConsoleScreen(
     var autoScrollEnabled by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val exportPath by viewModel.exportPath.collectAsState()
+    val selectedFilter by viewModel.selectedFilter.collectAsState()
+
+    val filteredLogs = remember(logs, selectedFilter) {
+        if (selectedFilter == null) {
+            logs
+        } else {
+            logs.filter { it.level == selectedFilter }.toImmutableList()
+        }
+    }
 
     // Side-effect to auto-scroll when new logs arrive, only if auto-scroll is enabled
-    LaunchedEffect(logs.size) {
-        if (autoScrollEnabled && logs.isNotEmpty()) {
-            listState.scrollToItem(logs.size - 1)
+    LaunchedEffect(filteredLogs.size) {
+        if (autoScrollEnabled && filteredLogs.isNotEmpty()) {
+            listState.scrollToItem(filteredLogs.size - 1)
         }
     }
 
@@ -99,13 +112,54 @@ fun LogConsoleScreen(
 
                 // Stats Chips row
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    LevelCountChip(label = "SUCCESS", count = counts[LogLevel.SUCCESS] ?: 0, color = Color(0xFF00E676))
-                    LevelCountChip(label = "INFO", count = counts[LogLevel.INFO] ?: 0, color = Color(0xFF00D2FF))
-                    LevelCountChip(label = "WARN", count = counts[LogLevel.WARN] ?: 0, color = Color(0xFFFFC400))
-                    LevelCountChip(label = "ERROR", count = counts[LogLevel.ERROR] ?: 0, color = Color(0xFFFF2D55))
+                    LevelCountChip(
+                        label = "ALL",
+                        count = logs.size,
+                        color = Color.White,
+                        isSelected = selectedFilter == null,
+                        onClick = { viewModel.setFilter(null) }
+                    )
+                    LevelCountChip(
+                        label = "SUCCESS",
+                        count = counts[LogLevel.SUCCESS] ?: 0,
+                        color = Color(0xFF00E676),
+                        isSelected = selectedFilter == LogLevel.SUCCESS,
+                        onClick = {
+                            viewModel.setFilter(if (selectedFilter == LogLevel.SUCCESS) null else LogLevel.SUCCESS)
+                        }
+                    )
+                    LevelCountChip(
+                        label = "INFO",
+                        count = counts[LogLevel.INFO] ?: 0,
+                        color = Color(0xFF00D2FF),
+                        isSelected = selectedFilter == LogLevel.INFO,
+                        onClick = {
+                            viewModel.setFilter(if (selectedFilter == LogLevel.INFO) null else LogLevel.INFO)
+                        }
+                    )
+                    LevelCountChip(
+                        label = "WARN",
+                        count = counts[LogLevel.WARN] ?: 0,
+                        color = Color(0xFFFFC400),
+                        isSelected = selectedFilter == LogLevel.WARN,
+                        onClick = {
+                            viewModel.setFilter(if (selectedFilter == LogLevel.WARN) null else LogLevel.WARN)
+                        }
+                    )
+                    LevelCountChip(
+                        label = "ERROR",
+                        count = counts[LogLevel.ERROR] ?: 0,
+                        color = Color(0xFFFF2D55),
+                        isSelected = selectedFilter == LogLevel.ERROR,
+                        onClick = {
+                            viewModel.setFilter(if (selectedFilter == LogLevel.ERROR) null else LogLevel.ERROR)
+                        }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -208,7 +262,7 @@ fun LogConsoleScreen(
                 ) {
                     // Explicit stable keys are set on each log item to bypass redundant recompositions
                     items(
-                        items = logs,
+                        items = filteredLogs,
                         key = { it.id }
                     ) { logItem ->
                         LogLineRow(logItem = logItem, timeFormatter = timeFormatter)
@@ -272,12 +326,15 @@ fun LogLineRow(
 fun LevelCountChip(
     label: String,
     count: Int,
-    color: Color
+    color: Color,
+    isSelected: Boolean,
+    onClick: () -> Unit
 ) {
     Surface(
-        color = Color(0xFF0F172A),
+        color = if (isSelected) color.copy(alpha = 0.2f) else Color(0xFF0F172A),
         shape = RoundedCornerShape(6.dp),
-        border = BorderStroke(0.5.dp, color.copy(alpha = 0.5f))
+        border = BorderStroke(if (isSelected) 1.5.dp else 0.5.dp, color.copy(alpha = if (isSelected) 0.8f else 0.5f)),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
@@ -293,7 +350,7 @@ fun LevelCountChip(
                 text = "$label: $count",
                 color = Color.White,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold
             )
         }
     }

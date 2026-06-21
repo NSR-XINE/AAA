@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.feature.monitor.ui.LogConsoleScreen
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
 fun LiquidBackground(content: @Composable () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "blobs")
     
-    val blob1X by infiniteTransition.animateFloat(
+    val blob1XState = infiniteTransition.animateFloat(
         initialValue = -0.2f,
         targetValue = 1.2f,
         animationSpec = infiniteRepeatable(
@@ -74,7 +75,7 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         ),
         label = "blob1X"
     )
-    val blob1Y by infiniteTransition.animateFloat(
+    val blob1YState = infiniteTransition.animateFloat(
         initialValue = 0.1f,
         targetValue = 0.7f,
         animationSpec = infiniteRepeatable(
@@ -84,7 +85,7 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         label = "blob1Y"
     )
 
-    val blob2X by infiniteTransition.animateFloat(
+    val blob2XState = infiniteTransition.animateFloat(
         initialValue = 1.2f,
         targetValue = -0.2f,
         animationSpec = infiniteRepeatable(
@@ -93,7 +94,7 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         ),
         label = "blob2X"
     )
-    val blob2Y by infiniteTransition.animateFloat(
+    val blob2YState = infiniteTransition.animateFloat(
         initialValue = 0.8f,
         targetValue = 0.2f,
         animationSpec = infiniteRepeatable(
@@ -103,7 +104,7 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         label = "blob2Y"
     )
 
-    val blob3X by infiniteTransition.animateFloat(
+    val blob3XState = infiniteTransition.animateFloat(
         initialValue = 0.1f,
         targetValue = 0.9f,
         animationSpec = infiniteRepeatable(
@@ -112,7 +113,7 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         ),
         label = "blob3X"
     )
-    val blob3Y by infiniteTransition.animateFloat(
+    val blob3YState = infiniteTransition.animateFloat(
         initialValue = 0.4f,
         targetValue = 0.9f,
         animationSpec = infiniteRepeatable(
@@ -126,34 +127,48 @@ fun LiquidBackground(content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF090D16))
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val width = size.width
-            val height = size.height
-            val baseRadius = width.coerceAtLeast(height) * 0.35f
+            .drawBehind {
+                val width = size.width
+                val height = size.height
+                val baseRadius = width.coerceAtLeast(height) * 0.35f
 
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(Color(0xFF00D2FF).copy(alpha = 0.14f), Color.Transparent),
-                    center = Offset(width * blob1X, height * blob1Y),
+                // Read state values inside the draw phase to completely bypass recomposition!
+                val b1X = blob1XState.value
+                val b1Y = blob1YState.value
+                val b2X = blob2XState.value
+                val b2Y = blob2YState.value
+                val b3X = blob3XState.value
+                val b3Y = blob3YState.value
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0xFF00D2FF).copy(alpha = 0.14f), Color.Transparent),
+                        center = Offset(width * b1X, height * b1Y),
+                        radius = baseRadius
+                    ),
+                    center = Offset(width * b1X, height * b1Y),
                     radius = baseRadius
                 )
-            )
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(Color(0xFF7C3AED).copy(alpha = 0.12f), Color.Transparent),
-                    center = Offset(width * blob2X, height * blob2Y),
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0xFF7C3AED).copy(alpha = 0.12f), Color.Transparent),
+                        center = Offset(width * b2X, height * b2Y),
+                        radius = baseRadius * 1.2f
+                    ),
+                    center = Offset(width * b2X, height * b2Y),
                     radius = baseRadius * 1.2f
                 )
-            )
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(Color(0xFFEC4899).copy(alpha = 0.08f), Color.Transparent),
-                    center = Offset(width * blob3X, height * blob3Y),
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0xFFEC4899).copy(alpha = 0.08f), Color.Transparent),
+                        center = Offset(width * b3X, height * b3Y),
+                        radius = baseRadius * 0.9f
+                    ),
+                    center = Offset(width * b3X, height * b3Y),
                     radius = baseRadius * 0.9f
                 )
-            )
-        }
+            }
+    ) {
         content()
     }
 }

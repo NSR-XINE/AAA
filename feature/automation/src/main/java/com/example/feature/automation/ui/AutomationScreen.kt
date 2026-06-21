@@ -252,72 +252,97 @@ fun HistoryRow(
     timeFormatter: SimpleDateFormat,
     pulseAlpha: Float
 ) {
-    Column(
+    val isRunning = item.status.contains("Executing")
+    val statusColor = when {
+        item.status.contains("Completed") -> Color(0xFF00E676)
+        item.status.contains("Failed") -> Color(0xFFFF2D55)
+        else -> Color(0xFFFFC400) // Executing...
+    }
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 2.dp)
+            .padding(vertical = 4.dp)
+            .background(statusColor.copy(alpha = 0.03f), shape = RoundedCornerShape(6.dp))
+            .border(
+                BorderStroke(
+                    0.5.dp,
+                    Brush.linearGradient(
+                        listOf(statusColor.copy(alpha = 0.15f), Color.Transparent)
+                    )
+                ),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .padding(8.dp),
+        verticalAlignment = Alignment.Top
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = timeFormatter.format(Date(item.timestamp)),
-                    color = Color(0xFF4B5563),
-                    fontSize = 10.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = item.ruleName,
-                    color = Color.White,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontFamily = FontFamily.Monospace
-                )
-            }
-            
-            val isRunning = item.status.contains("Executing")
-            val statusColor = when {
-                item.status.contains("Completed") -> Color(0xFF00E676)
-                item.status.contains("Failed") -> Color(0xFFFF2D55)
-                else -> Color(0xFFFFC400) // Executing...
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (isRunning) {
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 4.dp)
-                            .size(5.dp)
-                            .alpha(pulseAlpha)
-                            .background(statusColor, shape = RoundedCornerShape(2.5.dp))
+        // Vertical indicator bar
+        Box(
+            modifier = Modifier
+                .width(2.5.dp)
+                .height(16.dp)
+                .background(statusColor, shape = RoundedCornerShape(1.dp))
+        )
+        
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = timeFormatter.format(Date(item.timestamp)),
+                        color = Color(0xFF64748B),
+                        fontSize = 9.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = item.ruleName,
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
                     )
                 }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (isRunning) {
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 4.dp)
+                                .size(5.dp)
+                                .alpha(pulseAlpha)
+                                .background(statusColor, shape = RoundedCornerShape(2.5.dp))
+                        )
+                    }
+                    Text(
+                        text = item.status.uppercase(),
+                        color = statusColor,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
+
+            if (item.output.isNotBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = item.status.uppercase(),
-                    color = statusColor,
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontFamily = FontFamily.Monospace
+                    text = item.output.trim(),
+                    color = Color(0xFFE2E8F0),
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF0F172A).copy(alpha = 0.5f), shape = RoundedCornerShape(6.dp))
+                        .border(BorderStroke(0.5.dp, Color.White.copy(alpha = 0.06f)), shape = RoundedCornerShape(6.dp))
+                        .padding(8.dp)
                 )
             }
-        }
-        
-        if (item.output.isNotBlank()) {
-            Text(
-                text = item.output.trim(),
-                color = Color(0xFFE5E7EB),
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, top = 2.dp)
-                    .background(Color(0xFF1F2937).copy(alpha = 0.3f), shape = RoundedCornerShape(4.dp))
-                    .border(BorderStroke(0.5.dp, Color(0xFF374151)), shape = RoundedCornerShape(4.dp))
-                    .padding(6.dp)
-            )
         }
     }
 }

@@ -360,27 +360,48 @@ fun LogLineRow(
     logItem: LogLineUiModel,
     timeFormatter: SimpleDateFormat
 ) {
+    val levelColor = Color(logItem.level.colorValue)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 3.dp),
-        verticalAlignment = Alignment.Top
+            .padding(vertical = 4.dp)
+            .background(levelColor.copy(alpha = 0.04f), shape = RoundedCornerShape(6.dp))
+            .border(
+                BorderStroke(
+                    0.5.dp,
+                    Brush.linearGradient(
+                        listOf(levelColor.copy(alpha = 0.15f), Color.Transparent)
+                    )
+                ),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        // Vertical indicator accent bar
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .height(18.dp)
+                .background(levelColor, shape = RoundedCornerShape(1.5.dp))
+        )
+        
+        Spacer(modifier = Modifier.width(8.dp))
+
         // Timestamp
         Text(
             text = timeFormatter.format(Date(logItem.timestamp)),
-            color = Color(0xFF4B5563),
+            color = Color(0xFF64748B),
             fontFamily = FontFamily.Monospace,
-            fontSize = 10.sp,
-            modifier = Modifier.padding(end = 8.dp)
+            fontSize = 9.sp,
+            modifier = Modifier.padding(end = 6.dp)
         )
 
         // Level Badge with glowing alpha backgrounds
-        val levelColor = Color(logItem.level.colorValue)
         Surface(
             color = levelColor.copy(alpha = 0.12f),
             shape = RoundedCornerShape(4.dp),
-            border = BorderStroke(0.5.dp, levelColor.copy(alpha = 0.4f)),
+            border = BorderStroke(0.5.dp, levelColor.copy(alpha = 0.5f)),
             modifier = Modifier.padding(end = 8.dp)
         ) {
             Text(
@@ -389,14 +410,14 @@ fun LogLineRow(
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 8.sp,
                 fontFamily = FontFamily.Monospace,
-                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.5.dp)
             )
         }
 
         // Log Message body
         Text(
             text = logItem.message,
-            color = Color(0xFFE5E7EB),
+            color = Color(0xFFF1F5F9),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             modifier = Modifier.weight(1f)
@@ -413,26 +434,38 @@ fun LevelCountChip(
     onClick: () -> Unit
 ) {
     Surface(
-        color = if (isSelected) color.copy(alpha = 0.2f) else Color(0xFF1F2937),
-        shape = RoundedCornerShape(6.dp),
-        border = BorderStroke(if (isSelected) 1.5.dp else 0.5.dp, color.copy(alpha = if (isSelected) 0.8f else 0.4f)),
+        color = if (isSelected) color.copy(alpha = 0.15f) else Color(0xFF1E293B).copy(alpha = 0.4f),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(
+            if (isSelected) 1.5.dp else 0.5.dp,
+            if (isSelected) color else Color.White.copy(alpha = 0.1f)
+        ),
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(5.dp)
-                    .background(color, shape = RoundedCornerShape(2.5.dp))
+                    .size(6.dp)
+                    .background(color, shape = RoundedCornerShape(3.dp))
             )
-            Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "$label: $count",
-                color = Color.White,
+                text = label,
+                color = if (isSelected) Color.White else Color(0xFF94A3B8),
                 fontSize = 10.sp,
-                fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Medium
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                fontFamily = FontFamily.Monospace
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "($count)",
+                color = if (isSelected) color else Color(0xFF475569),
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace
             )
         }
     }

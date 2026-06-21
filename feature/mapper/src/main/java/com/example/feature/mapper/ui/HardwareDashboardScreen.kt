@@ -228,9 +228,9 @@ fun CpuCoreLayout(cpus: List<CpuCore>) {
 
                     Surface(
                         modifier = Modifier.weight(1f),
-                        color = Color(0xFF1F2937),
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, Color(0xFF374151))
+                        color = Color(0xFF1F2937).copy(alpha = 0.35f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f))
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Row(
@@ -247,10 +247,10 @@ fun CpuCoreLayout(cpus: List<CpuCore>) {
                                 // Active dot indicator
                                 Box(
                                     modifier = Modifier
-                                        .size(4.dp)
+                                        .size(6.dp)
                                         .background(
                                             if (core.frequencyHz > 0) Color(0xFF00D2FF) else Color.Gray,
-                                            shape = RoundedCornerShape(2.dp)
+                                            shape = RoundedCornerShape(3.dp)
                                         )
                                 )
                             }
@@ -274,9 +274,10 @@ fun CpuCoreLayout(cpus: List<CpuCore>) {
                                 progress = { progress },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(3.dp),
+                                    .height(4.dp),
                                 color = Color(0xFF00D2FF),
-                                trackColor = Color(0xFF111827)
+                                trackColor = Color(0xFF111827).copy(alpha = 0.4f),
+                                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
                             )
                         }
                     }
@@ -303,9 +304,9 @@ fun ThermalsCardLayout(thermals: List<ThermalZone>) {
             }
 
             Surface(
-                color = Color(0xFF1F2937),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color(0xFF374151))
+                color = Color(0xFF1F2937).copy(alpha = 0.35f),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(
@@ -346,7 +347,8 @@ fun ThermalsCardLayout(thermals: List<ThermalZone>) {
                             .fillMaxWidth()
                             .height(4.dp),
                         color = statusColor,
-                        trackColor = Color(0xFF111827)
+                        trackColor = Color(0xFF111827).copy(alpha = 0.4f),
+                        strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
                     )
                 }
             }
@@ -361,9 +363,9 @@ fun StorageCardLayout(storage: List<BlockDevice>) {
             val sizeGb = dev.sizeBytes / (1024.0 * 1024.0 * 1024.0)
 
             Surface(
-                color = Color(0xFF1F2937),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color(0xFF374151))
+                color = Color(0xFF1F2937).copy(alpha = 0.35f),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(
@@ -408,7 +410,7 @@ fun StorageCardLayout(storage: List<BlockDevice>) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(6.dp)
-                            .background(Color(0xFF111827), shape = RoundedCornerShape(3.dp))
+                            .background(Color(0xFF111827).copy(alpha = 0.5f), shape = RoundedCornerShape(3.dp))
                     ) {
                         // Mock partition 1 (System)
                         Box(

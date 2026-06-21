@@ -213,8 +213,9 @@ fun DeveloperScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF1E293B))
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(0xFF1E293B).copy(alpha = 0.4f))
+                        .border(BorderStroke(0.5.dp, Color.White.copy(alpha = 0.08f)), RoundedCornerShape(10.dp))
                         .clickable {
                             uriHandler.openUri("https://github.com/NSR-XINE/AAA")
                         }
@@ -277,15 +278,15 @@ fun DeveloperScreen(
                         fontFamily = FontFamily.Monospace
                     )
 
-                    Button(
+                    OutlinedButton(
                         onClick = { refreshInfo() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1E293B),
+                        colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color(0xFF00D2FF)
                         ),
+                        border = BorderStroke(1.dp, Color(0xFF00D2FF).copy(alpha = 0.4f)),
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
                         modifier = Modifier.height(28.dp),
-                        shape = RoundedCornerShape(6.dp)
+                        shape = RoundedCornerShape(8.dp)
                     ) {
                         if (isLoadingInfo) {
                             CircularProgressIndicator(
